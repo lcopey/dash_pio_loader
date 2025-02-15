@@ -1,0 +1,12 @@
+[project]
+name = 'dash-pio-loader'
+dependencies = [
+    'dash', 'dash-mantine-components', 'dash-iconify',
+]
+requires-python = '>= 3.10'
+
+[project.optional-dependencies]
+dev = ['pytest', 'ruff']
+
+[tool.pytest.ini_options]
+addopts = '--doctest-modules'
