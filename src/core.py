@@ -5,27 +5,34 @@ Basic Appshell with header and  navbar that collapses on mobile.  Also includes 
 import dash_mantine_components as dmc
 from dash import (
     Dash,
-    _dash_renderer,
+    _dash_renderer,  # noqa
     Input,
     Output,
     State,
     callback,
     clientside_callback,
 )
-from .components import make_theme_switch, make_header, make_nav_bar
+from .components import make_theme_switch, make_header, make_nav_bar, make_nav_tree
 from .app_ids import IDS
+import logging
 
-_dash_renderer._set_react_version("18.2.0")
+logging.basicConfig(level=logging.DEBUG)
+
+_dash_renderer._set_react_version("18.2.0")  # noqa
 
 app = Dash(external_stylesheets=dmc.styles.ALL)
-
-
 theme_toggle = make_theme_switch(id=IDS.switch_theme)
 
 layout = dmc.AppShell(
     [
         make_header(theme_toggle, "PIO Loader"),
-        make_nav_bar([], "Root folder"),
+        make_nav_bar(
+            children=make_nav_tree(
+                id=IDS.tree, path="/home/laurent/Images/2023_Photos_Périgord/"
+            ),
+            title="Root folder",
+            id=IDS.navbar,
+        ),
         dmc.AppShellMain("Main"),
     ],
     header={"height": 60},
@@ -35,17 +42,16 @@ layout = dmc.AppShell(
         "breakpoint": "sm",
         "collapsed": {"mobile": True},
     },
-    id="appshell",
+    id=IDS.app_shell,
 )
-
 
 app.layout = dmc.MantineProvider(layout)
 
 
 @callback(
-    Output("appshell", "navbar"),
+    Output(IDS.app_shell, "navbar"),
     Input("burger", "opened"),
-    State("appshell", "navbar"),
+    State(IDS.app_shell, "navbar"),
 )
 def navbar_is_open(opened, navbar):
     navbar["collapsed"] = {"mobile": not opened}
