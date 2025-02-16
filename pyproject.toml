@@ -1,7 +1,7 @@
 [project]
 name = 'dash-pio-loader'
 dependencies = [
-    'dash', 'dash-mantine-components', 'dash-iconify',
+    'dash', 'dash-mantine-components', 'dash-iconify', 'plotly'
 ]
 requires-python = '>= 3.10'
 

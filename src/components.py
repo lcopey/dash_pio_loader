@@ -110,9 +110,9 @@ def make_nav_tree(path: Path | str, id: str):
     if not isinstance(path, Path):
         path = Path(path)
 
-    nodes = walk_directory(path, predicate=lambda x: x.name.endswith(".jpg"))
+    nodes = walk_directory(path, predicate=lambda x: x.name.endswith(".json"))
     nodes = [nodes]
     nodes = filter_nodes(nodes)
     nodes = sort_nodes(nodes)
 
-    return dmc.Tree(id=id, data=nodes)
+    return dmc.Tree(id=id, data=nodes, selectOnClick=True)

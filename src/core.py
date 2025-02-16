@@ -11,10 +11,14 @@ from dash import (
     State,
     callback,
     clientside_callback,
+    no_update,
 )
+from dash.dcc import Graph
 from .components import make_theme_switch, make_header, make_nav_bar, make_nav_tree
 from .app_ids import IDS
 import logging
+from pathlib import Path
+import plotly.io as pio
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -27,13 +31,11 @@ layout = dmc.AppShell(
     [
         make_header(theme_toggle, "PIO Loader"),
         make_nav_bar(
-            children=make_nav_tree(
-                id=IDS.tree, path="/home/laurent/Images/2023_Photos_Périgord/"
-            ),
+            children=make_nav_tree(id=IDS.tree, path="./"),
             title="Root folder",
             id=IDS.navbar,
         ),
-        dmc.AppShellMain("Main"),
+        dmc.AppShellMain(["Main", Graph(id=IDS.figure)]),
     ],
     header={"height": 60},
     padding="md",
@@ -68,6 +70,16 @@ clientside_callback(
     Output(IDS.switch_theme, "id"),
     Input(IDS.switch_theme, "checked"),
 )
+
+
+@callback(Output(IDS.figure, "figure"), Input(IDS.tree, "selected"))
+def on_selection(selected):
+    if selected:
+        selected = Path(selected[0])
+        if selected.is_file():
+            return pio.read_json(selected)
+    return no_update
+
 
 if __name__ == "__main__":
     app.run(debug=True)

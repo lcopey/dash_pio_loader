@@ -6,6 +6,7 @@ class AppIds(BaseIds):
     switch_theme = auto()
     navbar = auto()
     tree = auto()
+    figure = auto()
 
 
 IDS = AppIds()
